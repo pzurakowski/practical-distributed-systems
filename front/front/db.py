@@ -22,34 +22,31 @@ class UserProfileDAO:
         profile, _, = self._create_or_get(cookie)
         return profile
 
-    def _create_or_get(self, cookie: str) -> tuple[UserProfile, int]:
+    def _get(self, cookie: str) -> tuple[UserProfile, int]:
         key = (self.NAMESPACE, self.SET, cookie)
+
         try:
             (_, meta, compressed) = self.client.get(key)
             decompressed = snappy.decompress(compressed['data'])
 
             user_profile = UserProfile.model_validate_json(decompressed)
             generation = meta['gen']
-            
-        except aerospike.exception.RecordNotFound:
-            user_profile = UserProfile(
-                cookie=cookie,
-                views=[],
-                buys=[]
-            )
-            generation = 0
-            self._put(user_profile, generation)
+        except:
+            return None, None
         
         return user_profile, generation
     
-    def _put(self, user_profile: UserProfile, generation: int) -> bool:
+    def _put(self, user_profile: UserProfile, generation: int | None) -> bool:
         key = (self.NAMESPACE, self.SET, user_profile.cookie)
         
         json = user_profile.model_dump_json()
         compressed = snappy.compress(json)
 
         try:
-            self.client.put(key, {'data': compressed}, meta={'gen': generation}, policy={'gen': aerospike.POLICY_GEN_EQ})
+            if generation is None:
+                self.client.put(key, {'data': compressed})
+            else:
+                self.client.put(key, {'data': compressed}, meta={'gen': generation}, policy={'gen': aerospike.POLICY_GEN_EQ})
         except aerospike.exception.RecordGenerationError:
             print("generation error")
             return False
@@ -57,7 +54,9 @@ class UserProfileDAO:
         return True
         
     def _add_tag(self, user_tag: UserTag) -> bool:
-        profile, generation = self._create_or_get(user_tag.cookie)
+        profile, generation = self._create(user_tag.cookie)
+        if profile is None:
+            profile = UserProfile(cookie = user_tag.cookie, views = [], buys = [])
 
         if user_tag.action == "VIEW":
             profile.views.append(user_tag)

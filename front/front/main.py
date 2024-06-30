@@ -15,6 +15,9 @@ async def user_tags(user_tag: UserTag, dao: Annotated[Dict[str, UserProfile], De
 async def user_profiles(cookie: str, time_range: str, body: UserProfile, dao: Annotated[Dict[str, UserProfile], Depends(UserProfileDAO)], limit: int = 200):
     profile = dao.get(cookie)
 
+    if profile is None:
+        return UserProfile(cookie=cookie, views=[], buys=[])
+
     start_time_str, end_time_str = time_range.split('_')
     start_time = datetime.fromisoformat(start_time_str)
     end_time = datetime.fromisoformat(end_time_str)
