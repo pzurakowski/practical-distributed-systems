@@ -19,7 +19,7 @@ class UserProfileDAO:
         self.client = aerospike.client(config).connect()
     
     def get(self, cookie: str) -> UserProfile:
-        profile, _, = self._create_or_get(cookie)
+        profile, _, = self._get(cookie)
         return profile
 
     def _get(self, cookie: str) -> tuple[UserProfile, int]:
@@ -54,7 +54,7 @@ class UserProfileDAO:
         return True
         
     def _add_tag(self, user_tag: UserTag) -> bool:
-        profile, generation = self._create(user_tag.cookie)
+        profile, generation = self._get(user_tag.cookie)
         if profile is None:
             profile = UserProfile(cookie = user_tag.cookie, views = [], buys = [])
 
