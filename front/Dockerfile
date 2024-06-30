@@ -6,6 +6,10 @@ COPY requirements.txt /app/requirements.txt
 
 RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
+COPY run.sh /app/run.sh
+
+RUN chmod +x /app/run.sh
+
 COPY front /app/front
 
-CMD ["uvicorn", "front.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["/app/run.sh"]

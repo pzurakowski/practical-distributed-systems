@@ -1,0 +1,14 @@
+# For local use only!
+version: '3.8'
+
+services:
+  front:
+    build:
+      context: ./front
+    container_name: front
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./front/front:/app/front
+    environment:
+      - ENVIRONMENT=dev
