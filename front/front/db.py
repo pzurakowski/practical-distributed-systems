@@ -19,13 +19,8 @@ class UserProfileDAO:
             'policies': {
                     'read': {
                         'replica': aerospike.POLICY_REPLICA_ANY,
-                        'socket_timeout': 100,
-                        'total_timeout': 1000
                     },
                     'write': {
-                        'socket_timeout': 100,
-                        'total_timeout': 1000,
-                        'max_retries': 1,
                         'commit_level': aerospike.POLICY_COMMIT_LEVEL_MASTER,
                     }
             }
