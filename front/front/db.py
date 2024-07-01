@@ -23,6 +23,7 @@ class UserProfileDAO:
                     },
                     'write': {
                         'commit_level': aerospike.POLICY_COMMIT_LEVEL_MASTER,
+                        'exists': aerospike.POLICY_EXISTS_CREATE_OR_REPLACE,
                     }
             }
         }
