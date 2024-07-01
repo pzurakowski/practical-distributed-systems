@@ -14,8 +14,13 @@ class UserProfileDAO:
                       ('st117vm107.rtb-lab.pl', 3000),
                       ('st117vm108.rtb-lab.pl', 3000),
                       ('st117vm109.rtb-lab.pl', 3000),
-                      ('st117vm110.rtb-lab.pl', 3000)]
-            # 'hosts': [('aerospike', 3000)]
+                      ('st117vm110.rtb-lab.pl', 3000)],
+            # 'hosts': [('aerospike', 3000)],
+            'policies': {
+                'write': {
+                    'commit_level': aerospike.POLICY_COMMIT_LEVEL_MASTER
+                }
+            }
         }
 
         self.client = aerospike.client(config).connect()
