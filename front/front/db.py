@@ -4,16 +4,18 @@ import snappy
 
 class UserProfileDAO:
     def __init__(self):
-        self.NAMESPACE = 'mimuw'
+        self.NAMESPACE = 'test'
+        # self.NAMESPACE = 'mimuw'
         self.SET = 'user_profile'
         self.RETRY_COUNT = 3
 
         config = {
-            'hosts': [('st117vm106.rtb-lab.pl', 3000),
-                      ('st117vm107.rtb-lab.pl', 3000),
-                      ('st117vm108.rtb-lab.pl', 3000),
-                      ('st117vm109.rtb-lab.pl', 3000),
-                      ('st117vm110.rtb-lab.pl', 3000)]
+            # 'hosts': [('st117vm106.rtb-lab.pl', 3000),
+            #           ('st117vm107.rtb-lab.pl', 3000),
+            #           ('st117vm108.rtb-lab.pl', 3000),
+            #           ('st117vm109.rtb-lab.pl', 3000),
+            #           ('st117vm110.rtb-lab.pl', 3000)]
+            'hosts': [('aerospike', 3000)]
         }
 
         self.client = aerospike.client(config).connect()
@@ -58,8 +60,12 @@ class UserProfileDAO:
 
         if user_tag.action == "VIEW":
             profile.views.append(user_tag)
+            if len(profile.views) > 200:
+                profile.views.pop(0)
         elif user_tag.action == "BUY":
             profile.buys.append(user_tag)
+            if len(profile.buys) > 200:
+                profile.buys.pop(0)
         
         return self._put(profile, generation)
 
