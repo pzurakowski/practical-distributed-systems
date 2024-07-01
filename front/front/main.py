@@ -26,11 +26,13 @@ async def user_profiles(cookie: str, time_range: str, body: UserProfile, dao: An
         view for view in profile.views
         if start_time <= datetime.fromisoformat(view.time[:-1]) < end_time
     ]
+    filtered_views.sort(key=lambda tag: datetime.fromisoformat(tag.time[:-1]), reverse=True)
 
     filtered_buys = [
         buy for buy in profile.buys
         if start_time <= datetime.fromisoformat(buy.time[:-1]) < end_time
     ]
+    filtered_buys.sort(key=lambda tag: datetime.fromisoformat(tag.time[:-1]), reverse=True)
 
     result = UserProfile(cookie=cookie, views=filtered_views[-limit:], buys=filtered_buys[-limit:])
 
