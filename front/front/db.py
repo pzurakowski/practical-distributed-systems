@@ -4,7 +4,6 @@ import snappy
 
 class UserProfileDAO:
     def __init__(self):
-        # self.NAMESPACE = 'test'
         self.NAMESPACE = 'mimuw'
         self.SET = 'user_profile'
         self.RETRY_COUNT = 3
@@ -15,7 +14,6 @@ class UserProfileDAO:
                       ('st117vm108.rtb-lab.pl', 3000),
                       ('st117vm109.rtb-lab.pl', 3000),
                       ('st117vm110.rtb-lab.pl', 3000)],
-            # 'hosts': [('aerospike', 3000)],
             'policies': {
                     'read': {
                         'replica': aerospike.POLICY_REPLICA_ANY,
@@ -57,7 +55,6 @@ class UserProfileDAO:
         try:
             self.client.put(key, {'data': compressed}, meta={'gen': generation}, policy={'gen': aerospike.POLICY_GEN_EQ})
         except aerospike.exception.RecordGenerationError:
-            print("generation error")
             return False
         
         return True
@@ -84,7 +81,7 @@ class UserProfileDAO:
             if self._add_tag(user_tag):
                 return
 
-        raise Exception('Failed to add tag')
+        print('Failed to add tag')
 
 
     def __del__(self):
