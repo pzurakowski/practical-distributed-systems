@@ -1,6 +1,7 @@
 ---
 - name: Docker install
   hosts: docker
+  become: true
   tasks:
     - name: Install the latest version of Docker
       become: true
@@ -48,3 +49,15 @@
         name: "{{ ansible_user }}"
         groups: docker
         append: yes
+
+    - name: Install required system packages
+      apt:
+        pkg:
+          - python3-pip
+          - virtualenv
+          - python3-setuptools
+        state: latest
+
+    - name: Install Docker Module for Python
+      pip:
+        name: docker

@@ -12,8 +12,13 @@
         src: ../haproxy
         dest: /tmp
 
-    - name: Build Docker image
-      command: docker build -t {{ docker_image_name }} /tmp/haproxy
+    - name: Build container
+      docker_image:
+        name: "{{ docker_image_name }}"
+        build:
+          path: /tmp/haproxy
+        source: build
+        state: present
 
     - name: Remove existing container if it exists
       docker_container:

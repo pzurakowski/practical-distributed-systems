@@ -6,3 +6,6 @@ st117vm1[01:03].rtb-lab.pl
 
 [haproxy]
 st117vm101.rtb-lab.pl
+
+[docker]
+st117vm1[01:03].rtb-lab.pl
