@@ -41,11 +41,6 @@ async def user_profiles(cookie: str, time_range: str, body: UserProfile, dao: An
 
     result = UserProfile(cookie=cookie, views=filtered_views[-limit:], buys=filtered_buys[-limit:])
 
-    if result != body:
-        print("Profile mismatch")
-        print(f"Expected: {body}")
-        print(f"Actual: {result}")
-
     return result
 
 @app.post("/aggregates")
