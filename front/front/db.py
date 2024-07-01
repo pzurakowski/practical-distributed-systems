@@ -19,6 +19,7 @@ class UserProfileDAO:
             'policies': {
                     'read': {
                         'replica': aerospike.POLICY_REPLICA_ANY,
+                        'socket_timeout': 50,
                     },
                     'write': {
                         'commit_level': aerospike.POLICY_COMMIT_LEVEL_MASTER,
