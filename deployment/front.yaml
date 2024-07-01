@@ -1,6 +1,7 @@
 ---
 - name: Deploy front
   hosts: front
+  become: true
   any_errors_fatal: true
   vars:
     docker_image_name: front

@@ -1,6 +1,7 @@
 ---
 - name: Deploy haproxy
   hosts: haproxy
+  become: true
   any_errors_fatal: true
   vars:
     docker_image_name: haproxy
