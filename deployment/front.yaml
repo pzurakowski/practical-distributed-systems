@@ -1,0 +1,81 @@
+---
+- name: Install Docker and Deploy Container from Dockerfile
+  hosts: front
+  any_errors_fatal: true
+  vars:
+    docker_image_name: front
+    docker_container_name: front
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install necessary dependencies
+      apt:
+        name: 
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+        state: present
+
+    - name: Add Docker official GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Set up the stable repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+        state: present
+
+    - name: Update apt cache again
+      apt:
+        update_cache: yes
+
+    - name: Install Docker
+      apt:
+        name: docker-ce
+        state: latest
+
+    - name: Ensure Docker is running
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Add user to docker group
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+
+    - name: Copy Dockerfile to target
+      copy:
+        src: ../front
+        dest: /tmp/front
+
+    - name: Build Docker image
+      command: docker build -t {{ docker_image_name }} /tmp/front
+
+    - name: Remove existing container if it exists
+      docker_container:
+        name: "{{ docker_container_name }}"
+        state: absent
+        force_kill: yes
+        purge_networks: yes
+
+    - name: Run Docker container
+      docker_container:
+        name: "{{ docker_container_name }}"
+        image: "{{ docker_image_name }}"
+        state: started
+        restart_policy: always
+        ports:
+          - "8000:8000"
+
+    - name: Clean up Dockerfile from target
+      file:
+        path: /tmp/Dockerfile
+        state: absent
