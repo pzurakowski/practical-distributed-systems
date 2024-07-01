@@ -17,9 +17,17 @@ class UserProfileDAO:
                       ('st117vm110.rtb-lab.pl', 3000)],
             # 'hosts': [('aerospike', 3000)],
             'policies': {
-                'write': {
-                    'commit_level': aerospike.POLICY_COMMIT_LEVEL_MASTER
-                }
+                    'read': {
+                        'replica': aerospike.POLICY_REPLICA_ANY,
+                        'socket_timeout': 100,
+                        'total_timeout': 1000
+                    },
+                    'write': {
+                        'socket_timeout': 100,
+                        'total_timeout': 1000,
+                        'max_retries': 1,
+                        'commit_level': aerospike.POLICY_COMMIT_LEVEL_MASTER,
+                    }
             }
         }
 
