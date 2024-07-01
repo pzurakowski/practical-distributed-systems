@@ -1,5 +1,5 @@
 ---
-- name: Install Docker and Deploy Container from Dockerfile
+- name: Deploy haproxy
   hosts: haproxy
   any_errors_fatal: true
   vars:
