@@ -36,17 +36,14 @@ class UserProfileDAO:
         
         return user_profile, generation
     
-    def _put(self, user_profile: UserProfile, generation: int | None) -> bool:
+    def _put(self, user_profile: UserProfile, generation: int) -> bool:
         key = (self.NAMESPACE, self.SET, user_profile.cookie)
         
         json = user_profile.model_dump_json()
         compressed = snappy.compress(json)
 
         try:
-            if generation is None:
-                self.client.put(key, {'data': compressed})
-            else:
-                self.client.put(key, {'data': compressed}, meta={'gen': generation}, policy={'gen': aerospike.POLICY_GEN_EQ})
+            self.client.put(key, {'data': compressed}, meta={'gen': generation}, policy={'gen': aerospike.POLICY_GEN_EQ})
         except aerospike.exception.RecordGenerationError:
             print("generation error")
             return False
@@ -57,6 +54,7 @@ class UserProfileDAO:
         profile, generation = self._get(user_tag.cookie)
         if profile is None:
             profile = UserProfile(cookie = user_tag.cookie, views = [], buys = [])
+            generation = 0
 
         if user_tag.action == "VIEW":
             profile.views.append(user_tag)
