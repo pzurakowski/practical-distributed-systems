@@ -3,16 +3,21 @@ from typing import Literal, List, Annotated, Union, Dict
 from datetime import datetime
 from front.models import UserTag, UserProfile, Aggregate
 from front.db import UserProfileDAO
+from functools import cache
 
 app = FastAPI()
 
+@cache
+def get_db():
+    db = UserProfileDAO()
+    return db
+
 @app.post("/user_tags", status_code=204)
-async def user_tags(user_tag: UserTag, dao: Annotated[Dict[str, UserProfile], Depends(UserProfileDAO)]):
-    cookie = user_tag.cookie
+async def user_tags(user_tag: UserTag, dao: Annotated[Dict[str, UserProfile], Depends(get_db)]):
     dao.add_tag(user_tag)
 
 @app.post("/user_profiles/{cookie}", status_code=200)
-async def user_profiles(cookie: str, time_range: str, body: UserProfile, dao: Annotated[Dict[str, UserProfile], Depends(UserProfileDAO)], limit: int = 200):
+async def user_profiles(cookie: str, time_range: str, body: UserProfile, dao: Annotated[Dict[str, UserProfile], Depends(get_db)], limit: int = 200):
     profile = dao.get(cookie)
 
     if profile is None:
