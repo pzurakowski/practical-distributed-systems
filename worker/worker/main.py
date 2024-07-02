@@ -14,6 +14,4 @@ def get_db():
 
 @broker.subscriber("user-tags")
 async def handle_msg(tag: UserTag, dao: AnalyticsDAO = Depends(get_db)):
-    print(f"Got tag {tag}")
     dao.increment_all(tag)
-    print(f"Finished working on {tag}")
