@@ -12,7 +12,7 @@ app = FastAPI()
 time.sleep(10)
 
 producer = KafkaProducer(
-    bootstrap_servers='kafka:9092',
+    bootstrap_servers='st117vm104.rtb-lab.pl:9092',
     value_serializer=lambda v: v.model_dump_json().encode('utf-8')
 )
 

@@ -1,0 +1,41 @@
+---
+- name: Deploy worker
+  hosts: worker
+  become: true
+  any_errors_fatal: true
+  vars:
+    docker_image_name: worker
+    docker_container_name: worker
+
+  tasks:
+    - name: Copy Dockerfile to target
+      copy:
+        src: ../worker
+        dest: /tmp
+
+    - name: Build container
+      docker_image:
+        name: "{{ docker_image_name }}"
+        build:
+          path: /tmp/worker
+        source: build
+        state: present
+
+    - name: Remove existing container if it exists
+      docker_container:
+        name: "{{ docker_container_name }}"
+        state: absent
+        force_kill: yes
+        purge_networks: yes
+
+    - name: Run Docker container
+      docker_container:
+        name: "{{ docker_container_name }}"
+        image: "{{ docker_image_name }}"
+        state: started
+        restart_policy: always
+
+    - name: Clean up Dockerfile from target
+      file:
+        path: /tmp/Dockerfile
+        state: absent

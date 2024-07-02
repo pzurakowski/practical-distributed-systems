@@ -4,7 +4,7 @@ from worker.models import UserTag
 from worker.db import AnalyticsDAO
 from functools import cache
 
-broker = KafkaBroker("kafka:9092")
+broker = KafkaBroker("st117vm104.rtb-lab.pl:9092")
 
 app = FastStream(broker)
 
