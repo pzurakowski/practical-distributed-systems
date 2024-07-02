@@ -1,6 +1,7 @@
 import aerospike
 from front.models import UserProfile, UserTag
 import snappy
+from datetime import datetime
 
 class UserProfileDAO:
     def __init__(self):
@@ -67,10 +68,12 @@ class UserProfileDAO:
 
         if user_tag.action == "VIEW":
             profile.views.append(user_tag)
+            profile.views.sort(key=lambda tag: datetime.fromisoformat(tag.time[:-1]))
             if len(profile.views) > 200:
                 profile.views.pop(0)
         elif user_tag.action == "BUY":
             profile.buys.append(user_tag)
+            profile.buys.sort(key=lambda tag: datetime.fromisoformat(tag.time[:-1]))
             if len(profile.buys) > 200:
                 profile.buys.pop(0)
         
