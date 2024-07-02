@@ -105,17 +105,17 @@ class AnalyticsQuery:
 
 class AnalyticsDAO:
     def __init__(self):
-        # self.NAMESPACE = 'mimuw'
-        self.NAMESPACE = 'test'
+        self.NAMESPACE = 'mimuw'
+        # self.NAMESPACE = 'test'
         self.SET = 'analytics'
 
         config = {
-            # 'hosts': [('st117vm106.rtb-lab.pl', 3000),
-            #           ('st117vm107.rtb-lab.pl', 3000),
-            #           ('st117vm108.rtb-lab.pl', 3000),
-            #           ('st117vm109.rtb-lab.pl', 3000),
-            #           ('st117vm110.rtb-lab.pl', 3000)],
-            'hosts': [('aerospike', 3000)],
+            'hosts': [('st117vm106.rtb-lab.pl', 3000),
+                      ('st117vm107.rtb-lab.pl', 3000),
+                      ('st117vm108.rtb-lab.pl', 3000),
+                      ('st117vm109.rtb-lab.pl', 3000),
+                      ('st117vm110.rtb-lab.pl', 3000)],
+            # 'hosts': [('aerospike', 3000)],
             'policies': {
                     'read': {
                         'replica': aerospike.POLICY_REPLICA_ANY,

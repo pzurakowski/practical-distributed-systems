@@ -36,12 +36,10 @@ class AnalyticsDAO:
 
         try:
             self.client.increment(key, bin, amount)
-            print(f"Counter '{bin}' incremented for key {key} by {amount}")
         except aerospike.exception.RecordNotFound:
             self.client.put(key, {bin: amount})
-            print(f"Counter '{bin}' created for key '{key}' with initial value 1.")
         except Exception as e:
-            print(f"An error occurred: {e}")
+            pass
 
     def increment_all(self, user_tag: UserTag):
         time_bucket = user_tag.time[:-7] + '00'

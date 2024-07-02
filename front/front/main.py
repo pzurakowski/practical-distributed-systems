@@ -73,4 +73,11 @@ async def aggregates(time_range: str,
     start_time_str, end_time_str = time_range.split('_')
 
     response = dao.get_batch(start_time_str, end_time_str, query)
+
+    if response != body:
+        print(f"Aggregates mismatched")
+        print(f"Expected: {body}\n")
+        print(f"Actual: {response}\n")
+        print("\n********************************\n")
+
     return response

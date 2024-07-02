@@ -16,5 +16,5 @@ git clone https://github.com/pzurakowski/practical-distributed-systems
 4. Run installation playbooks
 ```
 cd practical-distributed-systems/deployment
-ansible-playbook --extra-vars "ansible_user=<user> ansible_password=<password> ansible_ssh_extra_args='-o StrictHostKeyChecking=no'" -i hosts docker.yaml front.yaml haproxy.yaml aerospike.yaml
+ansible-playbook --extra-vars "ansible_user=<user> ansible_password=<password> ansible_ssh_extra_args='-o StrictHostKeyChecking=no'" -i hosts kafka.yaml docker.yaml haproxy.yaml aerospike.yaml worker.yaml front.yaml
 ```
