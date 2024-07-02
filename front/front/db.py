@@ -105,8 +105,8 @@ class AnalyticsQuery:
 
 class AnalyticsDAO:
     def __init__(self):
-        self.NAMESPACE = 'mimuw'
-        # self.NAMESPACE = 'test'
+        # self.NAMESPACE = 'mimuw'
+        self.NAMESPACE = 'test'
         self.SET = 'analytics'
 
         config = {
