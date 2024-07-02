@@ -6,6 +6,7 @@ from front.db import UserProfileDAO, AnalyticsDAO, AnalyticsQuery
 from functools import cache
 from kafka import KafkaProducer
 import time
+import sys
 
 app = FastAPI()
 
@@ -75,9 +76,9 @@ async def aggregates(time_range: str,
     response = dao.get_batch(start_time_str, end_time_str, query)
 
     if response != body:
-        print(f"Aggregates mismatched")
-        print(f"Expected: {body}\n")
-        print(f"Actual: {response}\n")
-        print("\n********************************\n")
+        print(f"Aggregates mismatched", file=sys.stderr)
+        print(f"Expected: {body}\n", file=sys.stderr)
+        print(f"Actual: {response}\n", file=sys.stderr)
+        print("\n********************************\n", file=sys.stderr)
 
     return response
