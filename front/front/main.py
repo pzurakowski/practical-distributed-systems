@@ -2,7 +2,7 @@ from fastapi import FastAPI, Query, Depends
 from typing import Literal, List, Annotated, Union, Dict
 from datetime import datetime
 from front.models import UserTag, UserProfile, Aggregate
-from front.db import UserProfileDAO
+from front.db import UserProfileDAO, AnalyticsDAO, AnalyticsQuery
 from functools import cache
 from kafka import KafkaProducer
 import time
@@ -19,6 +19,11 @@ producer = KafkaProducer(
 @cache
 def get_db():
     db = UserProfileDAO()
+    return db
+
+@cache
+def get_analytics_db():
+    db = AnalyticsDAO()
     return db
 
 @app.post("/user_tags", status_code=204)
@@ -55,5 +60,17 @@ async def user_profiles(cookie: str, time_range: str, body: UserProfile, dao: An
     return result
 
 @app.post("/aggregates")
-async def aggregates(time_range: str, action: Literal["VIEW", "BUY"], body: Aggregate, aggregates: Annotated[Union[List[Literal["COUNT", "SUM_PRICE"]], None], Query()] = None, origin: str | None = None, brand_id: str | None = None, category_id: str | None = None):
-    return body
+async def aggregates(time_range: str, 
+                     action: Literal["VIEW", "BUY"], 
+                     body: Aggregate, 
+                     aggregates: Annotated[Union[List[Literal["COUNT", "SUM_PRICE"]], None], Query()], 
+                     dao: Annotated[Dict[str, UserProfile], Depends(get_analytics_db)], 
+                     origin: str | None = None, 
+                     brand_id: str | None = None, 
+                     category_id: str | None = None):
+    
+    query = AnalyticsQuery(action, aggregates, origin, brand_id, category_id)
+    start_time_str, end_time_str = time_range.split('_')
+
+    response = dao.get_batch(start_time_str, end_time_str, query)
+    return response
