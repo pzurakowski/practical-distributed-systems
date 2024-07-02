@@ -5,16 +5,18 @@ from datetime import datetime
 
 class UserProfileDAO:
     def __init__(self):
-        self.NAMESPACE = 'mimuw'
+        # self.NAMESPACE = 'mimuw'
+        self.NAMESPACE = 'test'
         self.SET = 'user_profile'
         self.RETRY_COUNT = 3
 
         config = {
-            'hosts': [('st117vm106.rtb-lab.pl', 3000),
-                      ('st117vm107.rtb-lab.pl', 3000),
-                      ('st117vm108.rtb-lab.pl', 3000),
-                      ('st117vm109.rtb-lab.pl', 3000),
-                      ('st117vm110.rtb-lab.pl', 3000)],
+            # 'hosts': [('st117vm106.rtb-lab.pl', 3000),
+            #           ('st117vm107.rtb-lab.pl', 3000),
+            #           ('st117vm108.rtb-lab.pl', 3000),
+            #           ('st117vm109.rtb-lab.pl', 3000),
+            #           ('st117vm110.rtb-lab.pl', 3000)],
+            'hosts': [('aerospike', 3000)],
             'policies': {
                     'read': {
                         'replica': aerospike.POLICY_REPLICA_ANY,

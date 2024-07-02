@@ -4,8 +4,17 @@ from datetime import datetime
 from front.models import UserTag, UserProfile, Aggregate
 from front.db import UserProfileDAO
 from functools import cache
+from kafka import KafkaProducer
+import time
 
 app = FastAPI()
+
+time.sleep(10)
+
+producer = KafkaProducer(
+    bootstrap_servers='kafka:9092',
+    value_serializer=lambda v: v.model_dump_json().encode('utf-8')
+)
 
 @cache
 def get_db():
@@ -15,6 +24,8 @@ def get_db():
 @app.post("/user_tags", status_code=204)
 async def user_tags(user_tag: UserTag, dao: Annotated[Dict[str, UserProfile], Depends(get_db)]):
     dao.add_tag(user_tag)
+
+    producer.send('user-tags', user_tag)
 
 @app.post("/user_profiles/{cookie}", status_code=200)
 async def user_profiles(cookie: str, time_range: str, body: UserProfile, dao: Annotated[Dict[str, UserProfile], Depends(get_db)], limit: int = 200):
