@@ -2,10 +2,10 @@
 st117vm1[06:10].rtb-lab.pl
 
 [front]
-st117vm1[01:03].rtb-lab.pl
+st117vm1[01:05].rtb-lab.pl
 
 [haproxy]
 st117vm101.rtb-lab.pl
 
 [docker]
-st117vm1[01:03].rtb-lab.pl
+st117vm1[01:05].rtb-lab.pl
