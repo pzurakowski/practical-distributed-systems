@@ -81,7 +81,7 @@ class UserProfileDAO:
             if self._add_tag(user_tag):
                 return
 
-        print('Failed to add tag')
+        raise Exception("Failed to add tag - exceeded retries")
 
 
     def __del__(self):
