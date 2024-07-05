@@ -4,6 +4,7 @@ from datetime import datetime
 from front.models import UserTag, UserProfile, Aggregate
 from front.db import UserProfileDAO
 from functools import cache
+import sys
 
 app = FastAPI()
 
@@ -40,6 +41,14 @@ async def user_profiles(cookie: str, time_range: str, body: UserProfile, dao: An
     filtered_buys.sort(key=lambda tag: datetime.fromisoformat(tag.time[:-1]), reverse=True)
 
     result = UserProfile(cookie=cookie, views=filtered_views[-limit:], buys=filtered_buys[-limit:])
+
+    if result != body:
+        print("\n\n", file=sys.stderr)
+        print(f"Expected:\n {body} \n", file=sys.stderr)
+        print(f"Result:\n {result} \n", file=sys.stderr)
+        print(f"Full buys: \n {profile.buys} \n", file=sys.stderr)
+        print(f"Full views: \n {profile.views} \n", file=sys.stderr)
+        print(f"Cookie = {cookie}, time_range = {time_range}, limit = {limit}", file=sys.stderr)
 
     return result
 
